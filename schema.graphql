@@ -1,5 +1,4 @@
 type Query {
-    hello: String!
     students(id: Int!): Student
     classes(id: Int!): Class
 }

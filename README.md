@@ -19,22 +19,7 @@ pipenv install flask==1.1.1
 pipenv install ariadne==0.10.0
 ```
 
-* Create a schema.py and add this code:
 
-```python
-TBD
-```
-
-* Create a file called _app.py_ and add this code snippet.
-
-```python
-from flask import Flask, escape, request
-
-@app.route('/')
-def hello():
-    name = request.args.get("name", "World")
-    return f'Hello, {escape(name)}!'
-```
 
 * Run your Hello World Flask application from a shell/terminal.
 
@@ -49,9 +34,6 @@ $ env FLASK_APP=app.py flask run
 curl -i http://127.0.0.1:5000/
 ```
 
-## Requirements
-
-You will be building a RESTful class registration API in this lab.
 
 ### Domain Model
 
@@ -61,23 +43,39 @@ You will be building a RESTful class registration API in this lab.
 |-------|               |---------|
 ```
 
-### GraphQL operations to be implemented.
+### GraphQL operations implemented.
 
 * Mutate a new student
 
+_Request_
 ```
-{
-    "name": "Bob Smith"
+mutation {
+	addStudent(name: "Bob Smith") {
+    name
+    id
+  }
 }
 ```
 
-* Quety an existing student
+_Response_
+```
+{
+  "data": {
+    "addStudent": {
+      "id": "1",
+      "name": "Bob Smith"
+    }
+  }
+}
+
+```
+* Query an existing student
 
 _Request_
 
 ```
 {
-  students(id:1238125) {
+  students(id:1) {
     name
   }
 }
@@ -87,31 +85,106 @@ _Response_
 
 ```
 {
-    "name" : "Bob Smith"
+  "data": {
+    "students": {
+      "name": "Bob Smith"
+    }
+  }
 }
 ```
 
 * Mutate a class
 
+_Request_
 ```
-TBD
-```
-
-* Query a class
-
-```
-{
-  classess(id:1238125) {
+mutation{
+  addClass(name:"CMPE-273"){
+    id
     name
-    students
+    students{
+      id
+      name
+    }
   }
 }
 ```
 
-* Add students to a class
+_Response_
 
 ```
-TBD
+{
+  "data": {
+    "addClass": {
+      "id": "1",
+      "name": "CMPE-273",
+      "students": []
+    }
+  }
+}
+```
+
+* Query a class
+
+_Request_
+```
+{
+  classes(id:1) {
+    name
+    students{
+      id
+      name
+    }
+  }
+}
+```
+
+_Response_
+
+```
+{
+  "data": {
+    "classes": {
+      "name": "CMPE-273",
+      "students": []
+    }
+  }
+}
+
+```
+
+* Add students to a class
+
+_Request_
+```
+  mutation  {
+    addStudentToClass(studentId: 1, classId: 1) {
+      id
+      name
+      students{
+        name
+        id
+      }
+    }
+  }
+```
+
+_Response_
+
+```
+{
+  "data": {
+    "addStudentToClass": {
+      "id": "1",
+      "name": "CMPE-273",
+      "students": [
+        {
+          "id": "1",
+          "name": "Bob Smith"
+        }
+      ]
+    }
+  }
+}
 ```
 
 
